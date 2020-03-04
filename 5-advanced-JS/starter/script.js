@@ -1,5 +1,5 @@
 /*********************************************************************************************************************
- * OBJECTS, INHERITANCE & PROTOTYPE, INITIALIZATION
+ * 60. OBJECTS, INHERITANCE & PROTOTYPE, INITIALIZATION
  */
 
 // this keyword
@@ -22,7 +22,7 @@ console.log(johnLiteral)
 // lets use blueprint
 
 /**********************************************************************************************************
- * FUNCTION CONSTRUCTOR
+ * 61. FUNCTION CONSTRUCTOR
  * 
  * question: how to convert to class?
  */
@@ -112,7 +112,7 @@ console.log("mug3 dishwasher", mug3.canGoToDishwasher())
 */
 
 /********************************************************************************************************
- * OBJECT.CREATE
+ * 63. OBJECT.CREATE
  */
 /*
 let personProto = {
@@ -148,7 +148,7 @@ let jane = Object.create(personProto, {
  */
 
  /**********************************************************************************************************************
-  * PRIMITIVES VS OBJECTS
+  * 64. PRIMITIVES VS OBJECTS
   */
 
   // primitives hold the data in the variable itself
@@ -197,7 +197,7 @@ console.log(age, obj.city)
 */
 
 /**********************************************************************************************************************
- * FIRST CLASS FUNCTIONS
+ * 65. & 66. FIRST CLASS FUNCTIONS
  */
 
 // Pasing functions as arguments
@@ -216,12 +216,14 @@ function calculateAge(el) {
     return 2020 - el
 }
 
+/*
 let ages = arrayCalc(years, calculateAge)
 console.log(ages)
 let fullAges = arrayCalc(ages, isFullAge)
 console.log(fullAges)
 let maxHeartBeat = arrayCalc(ages, maxHeartRate)
 console.log(maxHeartBeat)
+*/
 
 function isFullAge(el) {
     return el >= 18
@@ -253,13 +255,306 @@ function interviewQuestion(job) {
     }
 }
 
+/*
 let teacherQuestion = interviewQuestion('teacher')
 let designerQuestion = interviewQuestion('designer')
 let cabDriverQuestion = interviewQuestion('cab driver')
+*/
 
+/*
 teacherQuestion('John')
 designerQuestion('Jane')
 cabDriverQuestion('Paolo')
+*/
 
 // another way
-interviewQuestion('teacher')('Mark') // this works because it's evaluated from left to right 
+//interviewQuestion('teacher')('Mark') // this works because it's evaluated from left to right 
+
+function whereDoWeGoToday(day) {
+    if (day.includes('Mon')) {
+        return function(item) {
+
+            console.log('Today is Monday and we go to the beach. We won\'t forget', item, 'with us.')
+        }
+    } else if (day.includes('Tue')) {
+        return function(item) {
+            console.log('On Tuesday, we go swimming and we take', item, 'with us.')
+        }
+    } else if (day.includes('Wed')) {
+        return function(item) {
+            console.log('Today is Wednesday and we go to the cinema. Let\'s take', item, 'with us.')
+        }
+    } else if (day.includes('Thu')) {
+        return function(item) {
+            console.log('Today is Thursday and we go running, using', item, '.')
+        }
+    } else if (day.includes('Fri')) {
+        return function(item) {
+            console.log('Today is Friday and we go to sauna, don\'t forget your', item, '!')
+        }
+    } else if (day.includes('Sat')) {
+        return function(item) {
+            console.log('Today is Saturday and we stay at home, just enjoying', item, '.')
+        }
+    } else if (day.includes('Sun')) {
+        return function(item) {
+            console.log('Today is Sunday and we go for a walk, uh-oh, we forgot', item, '.')
+        }
+    } else {
+        return function(item) {
+            console.log('Hard to say which day of a week it is, anyway, let\'s take', item, 'with us.' )
+        }
+    }
+}
+
+/*
+whereDoWeGoToday('Mon')('umbrella')
+whereDoWeGoToday('xuy')('flippers')
+whereDoWeGoToday('Tue')('hat')
+whereDoWeGoToday('Wed')('binoculars')
+whereDoWeGoToday('Thu')('book')
+whereDoWeGoToday('Fri')('beer')
+whereDoWeGoToday('Sat')('icecream')
+whereDoWeGoToday('Sun')('ball')
+*/
+/*
+whereDoWeGoToday('Tue')('fins')
+whereDoWeGoToday('Thu')('mashed potatoes')
+whereDoWeGoToday('dfg')('truth')
+whereDoWeGoToday('Mon')('watches')
+whereDoWeGoToday('Wed')('bishop')
+whereDoWeGoToday('Fri')('road')
+whereDoWeGoToday('Sat')('double-decker')
+whereDoWeGoToday('Sun')('Christmas tree')
+*/
+
+/********************************************************************************************************************
+ * 67. IIFE (Immediately Invoked Function Expressions)
+ * for data privacy or not interfering with the outer scope
+ */
+
+function game() {
+    // score variable cannot be accessible from outside because of the scope chain
+    var score = Math.random() * 10
+    // console.log(score >= 5)
+}
+
+game();
+
+// IIFE in js
+// what is inside of parenthesis cannot be a statement -> parser will treat it as an expression not declaration
+(function (goodLuck) {
+    var score = Math.random() * 10
+    // console.log(score >= 5 - goodLuck)
+})(1); // arguments to IIFE function inside the calling braces
+
+
+/**********************************************************************************************************************
+ * 68. CLOSURES
+ */
+function retirement(retirementAge) {
+    let a = ' years left until retirement.'
+    return function(yearOfBirth) {
+        let age = 2020 - yearOfBirth
+        console.log((retirementAge - age) + a)
+    }
+}
+
+/*
+retirement(65)(1990) // Germany
+retirement(67)(1990) // Iceland
+retirement(66)(1990) // US
+*/
+// Closure challenge - rewrite interview question
+function interviewQuestion(job) {
+    if (job === 'designer') {
+        return function(name) {
+            console.log(name + ', can you please explain what UX design is?')
+        }
+    } else if (job === 'teacher') {
+        return function(name) {
+            console.log('What subject do you teach, ' + name + ' ?')
+        }
+    } else {
+        return function(name) {
+            console.log('Hello, ' + name + ', what do you do for a job?')
+        }
+    }
+}
+
+function interviewQuestionClosure(job) {
+    const dialog = {
+        designer: 'What is UX design?',
+        teacher: 'What subject do you teach?'
+    }
+   return function(name) {
+        console.log('Hello,', name + ',', dialog[job])
+    }
+}
+
+/*
+interviewQuestionClosure('designer')('Jane')
+interviewQuestionClosure('teacher')('Paolo')
+*/
+
+/*********************************************************************************************************************
+ * 69. BIND, CALL, APPLY
+ */
+
+let john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function(style, timeOfDay) {
+        if (style === 'formal') {
+            console.log('Good', timeOfDay, 'ladies and gentlemen. I\'m', this.name + ', I\'m a', this.job, 'and I\'m', this.age, 'years old.')
+        } else if (style === 'friendly') {
+            console.log('Hey! What\'s up? I\'m', this.name + ', I\'m a', this.job, 'and I\'m', this.age, 'years old. Have a nice', timeOfDay)
+        }
+    }
+}
+
+//john.presentation('formal', 'morning')
+
+let emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer'
+}
+
+// method assignment
+//emily.presentation = john.presentation
+//emily.presentation('friendly', 'morning')
+
+// call
+// calls a function with this variable selected by us = method borrowing
+//john.presentation.call(emily, 'friendly', 'afternoon')
+
+// apply
+// same as call, but passes arguments as an array (also the receiving method has to accept arrays)
+//john.presentation.apply(emily, ['friendly', 'afternoon'])
+
+// bind
+// set this variable explicitly, does not immediately call function, but generates a copy so we can store it somewhere
+// also we can store it with pre-set arguments
+// = carrying
+let johnFriendly = john.presentation.bind(john, 'friendly')  // return function
+/*
+johnFriendly('afternoon')
+johnFriendly('night')
+*/
+let emilyFormal = john.presentation.bind(emily, 'formal')
+/*
+emilyFormal('morning')
+emilyFormal('evening')
+*/
+// real world example of this lecture
+
+// Pasing functions as arguments
+years = [1990, 1965, 1937, 2001, 1998]
+
+// generic calculation function
+function arrayCalc(arr, fn) {
+    let returnArray = []
+    for (let i = 0; i < arr.length; i++) {
+        returnArray.push(fn(arr[i]))  // fn is callback function -> we want it to be called later by the array.push function, callback = called later
+    }
+    return returnArray
+}
+
+function calculateAge(el) {
+    return 2020 - el
+}
+
+function isFullAge(ageLimit, el) {
+    return el >= ageLimit
+}
+
+function maxHeartRate(el) {
+    // formula only applies to people between 18 to 81 years old
+    if (el >= 18 && el <= 81) {
+        return Math.round(206.9 - (0.67 * el))
+    } else {
+        return -1
+    }
+}
+
+ages = arrayCalc(years, calculateAge)
+
+// for the next step if we want to calculate isFullAge, we have a problem because isFullAge takes two arguments while 
+// our array calc counts only with one argument - item from the array
+
+// -> we can use .bind method for pre-setting
+let fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));  //isfullAge function with 20 as limit will be passed to the arrayCalc
+/*
+console.log(ages)
+console.log(fullJapan)
+*/
+
+/****************************************************************************************************************************************************************
+ * 70.CODING CHALLENGE
+ */
+
+ (function() {
+    function Question(question, answers, correctAnswer) {
+        this.question = question
+        this.answers = answers
+        this.correctAnswer = correctAnswer
+    }
+
+    Question.prototype.logToConsole = function() {
+        console.log('\n' + this.question)
+        console.log('\nAnswers:')
+        Object.keys(this.answers).forEach(index => console.log(index + ':', this.answers[index]))
+    }
+
+    Question.prototype.checkAnswer = function(answer, callback) {
+        let sc
+        if (answer === this.correctAnswer) {
+            console.log('Great, correct answer!')
+            sc = callback(true)
+        } else {
+            console.log('Sorry, not a correct answer!')
+            sc = callback(false)
+        }
+
+        this.displayScore(sc)
+    }
+
+    Question.prototype.displayScore = function(score) {
+        console.log('Your current score is: ' + score)
+        console.log('-----------------------------------')
+    }
+
+    let potatoes = new Question('Do potatoes contain starch?', {0: 'Yes', 1: 'No'}, 0)
+    let cheese = new Question('Does cheese always contain lactose?', {0: 'Yes', 1: 'No'}, 1)
+    let lactose = new Question('What is lactose?', {0: 'lipide', 1: 'protein', 2: 'sacharide'}, 2)
+
+    let questions = [potatoes, cheese, lactose]
+
+    function score() {
+        let sc = 0
+        return function(correct) {
+            if (correct) {
+                sc++
+            }
+            return sc
+        }
+    }
+
+    let keepScore = score()
+
+    function askRandomQuestion() {
+        let n = Math.floor(Math.random() * questions.length)
+        let q = questions[n]
+        q.logToConsole()
+        let a = prompt('Please select the correct answer.')
+        
+        if (a !== 'exit') {
+            q.checkAnswer(parseInt(a), keepScore)
+            askRandomQuestion()
+        }
+    }
+    
+    askRandomQuestion()
+})();
